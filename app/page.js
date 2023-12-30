@@ -1,95 +1,118 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import { useState } from "react";
 
 export default function Home() {
+  const [todos, setTodos] = useState([]);
+  const [todo, setTodo] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Check if the todo is not empty
+    if (todo.trim() !== "") {
+      addTodo(todo);
+
+      // Clear the input field after adding the todo
+      setTodo("");
+    }
+  };
+
+  const handleCheckboxChange = (index) => {
+    // Handle checkbox change, if needed
+    console.log(`Checkbox changed for todo at index ${index}`);
+  };
+
+  const addTodo = (newTodo) => {
+    // Add the new todo to the list
+    setTodos([...todos, newTodo]);
+  };
+
+  const editHandle = (index) => {
+    // Handle edit action, if needed
+    console.log(`Edit clicked for todo at index ${index}`);
+  };
+
+  const deleteHandle = (index) => {
+    // Handle delete action, if needed
+    console.log(`Delete clicked for todo at index ${index}`);
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <main className="container mt-5">
+      <div>
+        <h1>Todo List</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <input
+              type="text"
+              className="input-group input-group-md"
+              style={{
+                height: "50px",
+                backgroundColor: "white",
+                color: "black",
+              }}
+              placeholder="Add a todo"
+              value={todo}
+              onChange={(e) => setTodo(e.target.value)}
             />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+          </div>
+          <div className="text-center">
+            <button className="btn btn-primary btn-lg mt-2" type="submit">
+              Add Todo
+            </button>
+          </div>
+        </form>
+        <h1>Today</h1>
+        <table className="table">
+          <thead>
+            <tr>
+              <th className="text-center" scope="col">
+                check
+              </th>
+              <th className="text-center" scope="col" colSpan="3">
+                Todos List
+              </th>
+              <th className="text-center" scope="col">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.map((todo, index) => (
+              <tr key={index}>
+                <td className="text-center">
+                  <input
+                    type="checkbox"
+                    onChange={() => handleCheckboxChange(index)}
+                  />
+                </td>
+                <td className="text-center" colSpan="3">
+                  {todo}
+                </td>
+                <td className="text-center">
+                  <div
+                    className="btn btn-warning"
+                    style={{ marginLeft: "9px", marginBottom: "5px" }}
+                    onClick={() => editHandle(index)}
+                  >
+                    Edit
+                  </div>
+                  <div
+                    className="btn btn-danger"
+                    style={{ marginLeft: "9px", marginBottom: "5px" }}
+                    onClick={() => deleteHandle(index)}
+                  >
+                    Delete
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </main>
-  )
+  );
 }
